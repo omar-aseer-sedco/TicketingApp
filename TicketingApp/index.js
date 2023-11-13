@@ -1,3 +1,8 @@
+const url = 'https://bankConfigurationPortal.local/api/Screens';
+const branchId = 3;
+const counterId = 17;
+const authorization = 'YmFuazE6dXNlcjE6YQ==';
+
 var stringsEn = {
     title: "Omar's Ticketing App",
     pageTitle: "Omar's Basically Okay Ticketing App",
@@ -111,7 +116,7 @@ function issueTicket(serviceId) {
 }
 
 function getButtons() {
-    fetch('https://bankConfigurationPortal.local/api/Screens?branchId=3&counterId=17', {headers: {'authorization': 'YmFuazE6dXNlcjE6YQ=='}}) // bank1: YmFuazE6dXNlcjE6YQ== | bank4: YmFuazQ6dXNlcjQ6YQ== | invalid creds: YmVlcDpib29wOmJlZXA=
+    fetch(`${url}?branchId=${branchId}&counterId=${counterId}`, {headers: {'authorization': authorization}}) // bank1: YmFuazE6dXNlcjE6YQ== | bank4: YmFuazQ6dXNlcjQ6YQ== | invalid creds: YmVlcDpib29wOmJlZXA=
         .then(response => {
             if (!response.ok) {
                 switch (response.status) {
@@ -140,7 +145,6 @@ function getButtons() {
         .then(data => {
             displayCounterInformation(data['BankName'], data['BranchNameEn'], data['CounterNameEn']);
             loadButtons(data['Buttons']);
-            console.log(data);
         })
         .catch(error => logError(error));
 }
