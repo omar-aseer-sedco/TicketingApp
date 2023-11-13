@@ -116,7 +116,7 @@ function issueTicket(serviceId) {
 }
 
 function getButtons() {
-    fetch(`${url}?branchId=${branchId}&counterId=${counterId}`, {headers: {'authorization': authorization}}) // bank1: YmFuazE6dXNlcjE6YQ== | bank4: YmFuazQ6dXNlcjQ6YQ== | invalid creds: YmVlcDpib29wOmJlZXA=
+    fetch(`${url}?branchId=${branchId}&counterId=${counterId}`, {headers: {'authorization': authorization}})
         .then(response => {
             if (!response.ok) {
                 switch (response.status) {
