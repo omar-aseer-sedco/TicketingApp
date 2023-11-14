@@ -1,8 +1,8 @@
 :root {
-    --background-color: #162054;
-    --primary-text-color: #8b97c9;
-    --secondary-text-color: white;
-    --tertiary-text-color: #db95bc;
+    --background-color: #202020;
+    --primary-text-color: #e1de71;
+    --secondary-text-color: #141414;
+    --tertiary-text-color: #e5e3aa;
 }
 
 html,
@@ -23,7 +23,7 @@ h1 {
 }
 
 h2 {
-    color: var(--secondary-text-color);
+    color: var(--tertiary-text-color);
     font-size: 1.25em;
 }
 
