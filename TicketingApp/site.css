@@ -17,18 +17,18 @@ body {
     background-color: var(--background-color);
 }
 
-h3, h4 {
-    text-align: center;
-}
-
 h1 {
     color: var(--primary-text-color);
-    font-size: 1.5em;
+    font-size: 1.8em;
 }
 
 h2 {
     color: var(--secondary-text-color);
     font-size: 1.25em;
+}
+
+h3, h4 {
+    text-align: center;
 }
 
 h3 {
@@ -46,10 +46,6 @@ h4 {
 
 p {
     color: var(--secondary-text-color);
-}
-
-header {
-    display: flex;
 }
 
 #page-container {
@@ -70,17 +66,20 @@ footer {
     justify-content: space-between;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
 .header-element {
     flex: 1;
     margin-left: 1.25em;
     margin-right: 1.25em;
 }
 
-#page-title-container {
-    text-align: start;
-}
-
-#datetime-container {
+#date-and-time {
     text-align: end;
 }
 

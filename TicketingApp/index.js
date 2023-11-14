@@ -57,7 +57,7 @@ function startClock() {
         const date = now.toLocaleDateString(languageString);
         const time = now.toLocaleTimeString(languageString);
     
-        const datetime = document.getElementById('dateAndTime');
+        const datetime = document.getElementById('date-and-time');
         datetime.innerText = `${date} - ${time}`;
     
         setTimeout(startClock, 1000);
