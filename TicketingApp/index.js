@@ -24,7 +24,7 @@ var stringsAr = {
     title: "تطبيق التذاكر",
     back: "عودة",
     error: "خطأ",
-    issueTicketMessage: "تم إصدار تذكرة للخدمة",
+    issueTicketMessage: "تم إصدار تذكرة لـ",
     badRequest: "طلب خاطئ، تأكد من صحة الإعدادات",
     unauthorized: "بيانات الاعتماد غير صالحة",
     notFound: "غير موجود: البنك لا يملك أي شاشات مفعلة حالياً",
@@ -54,8 +54,8 @@ function startClock() {
     try {
         const languageString = localStorage.getItem('language');
         const now = new Date();
-        const date = now.toLocaleDateString(languageString);
-        const time = now.toLocaleTimeString(languageString);
+        const date = now.toLocaleDateString(languageString ? languageString : defaultLanguage);
+        const time = now.toLocaleTimeString(languageString ? languageString : defaultLanguage);
     
         const datetime = document.getElementById('date-and-time');
         datetime.innerText = `${date} - ${time}`;
@@ -385,6 +385,7 @@ function logError(error) {
 }
 
 window.onload = _ => {
-    startClock();
+    localStorage.clear();
     changeLanguage();
+    startClock();
 }
