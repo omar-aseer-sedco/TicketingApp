@@ -3,6 +3,9 @@ const branchId = 3;
 const counterId = 17;
 const authorization = 'YmFuazE6dXNlcjE6YQ==';
 
+const defaultLanguage = 'en';
+const defaultDirection = 'ltr';
+
 var stringsEn = {
     title: "Omar's Ticketing App",
     pageTitle: "Omar's Basically Okay Ticketing App",
@@ -15,6 +18,8 @@ var stringsEn = {
     notFound: "Not Found - Your bank does not have any active screens",
     internalServerError: "Internal server error",
     unexpectedError: "Unexpected error",
+    welcome: "Welcome to",
+    switchLanguage: "عربي",
 }
 
 var stringsAr = {
@@ -29,26 +34,35 @@ var stringsAr = {
     notFound: "غير موجود: البنك لا يملك أي شاشات مفعلة حالياً",
     internalServerError: "خطأ داخلي",
     unexpectedError: "خطأ غير متوقع",
+    welcome: "أهلاً بك في",
+    switchLanguage: "English",
 }
 
 function getString(key, language = 'en') {
-    switch (language) {
-        case 'ar':
-            return stringsAr[key];
-        case 'en':
-            return stringsEn[key];
-        default:
-            return stringsEn[key];
+    try {
+        switch (language) {
+            case 'ar':
+                return stringsAr[key];
+            case 'en':
+                return stringsEn[key];
+            default:
+                return stringsEn[key];
+        }
+    }
+    catch (error) {
+        logError(error);
     }
 }
 
-function startClock() { // TODO: localization
+function startClock() {
     try {
+        const languageString = localStorage.getItem('language');
         const now = new Date();
-        const date = now.toLocaleDateString();
-        const time = now.toLocaleTimeString();
+        const date = now.toLocaleDateString(languageString);
+        const time = now.toLocaleTimeString(languageString);
     
-        document.getElementById('dateAndTime').innerText = `${date} - ${time}`;
+        const datetime = document.getElementById('dateAndTime');
+        datetime.innerText = `${date} - ${time}`;
     
         setTimeout(startClock, 1000);
     }
@@ -57,18 +71,18 @@ function startClock() { // TODO: localization
     }
 }
 
-function setButtonEvent(buttonElement, ticketingButton) { // TODO: localization
+function setButtonEvent(buttonElement, ticketingButton) {
     try {
         let message = '';
         if (ticketingButton['Type'] === 'ISSUE_TICKET') {
-            message = `${getString('issueTicketMessage')} ${ticketingButton['ServiceNameEn']}`; // TODO: localization
+            message = `${getString('issueTicketMessage', localStorage.getItem('language'))} ${ticketingButton[localStorage.getItem('language') === 'en' ? 'ServiceNameEn' : 'ServiceNameAr']}`;
             buttonElement.addEventListener('click', () => {
                 displayMessage(message);
                 issueTicket(ticketingButton['ServiceId']);
             });
         }
         else if (ticketingButton['Type'] === 'SHOW_MESSAGE') {
-            message = ticketingButton['MessageEn'];
+            message = ticketingButton[localStorage.getItem('language') === 'en' ? 'MessageEn' : 'MessageAr'];
             buttonElement.addEventListener('click', () => {
                 displayMessage(message);
             });
@@ -88,6 +102,8 @@ function displayMessage(message) {
         messageBody.innerHTML = message;
         showMessageContainer();
         hideButtonsContainer();
+        hideWelcomeMessage();
+        hideLanguageButton();
     }
     catch (error) {
         logError(error);
@@ -100,6 +116,8 @@ function displayErrorMessage(message) {
         errorMessageBody.innerHTML = message;
         hideButtonsContainer();
         showErrorMessageContainer();
+        hideWelcomeMessage();
+        hideLanguageButton();
     }
     catch (error) {
         logError(error);
@@ -116,6 +134,13 @@ function issueTicket(serviceId) {
 }
 
 function getButtons() {
+    try {
+        document.getElementById('buttons-container').innerHTML = '';
+    }
+    catch (error) {
+        logError(error);
+    }
+
     fetch(`${url}?branchId=${branchId}&counterId=${counterId}`, {headers: {'authorization': authorization}})
         .then(response => {
             if (!response.ok) {
@@ -143,7 +168,7 @@ function getButtons() {
             return response.json();
         })
         .then(data => {
-            displayCounterInformation(data['BankName'], data['BranchNameEn'], data['CounterNameEn']);
+            displayCounterInformation(data['BankName'], localStorage.getItem('language') === 'en' ? data['BranchNameEn'] : data['BranchNameAr']);
             loadButtons(data['Buttons']);
         })
         .catch(error => logError(error));
@@ -156,7 +181,7 @@ function loadButtons(buttons) {
         buttons.forEach(button => {
             const buttonElement = document.createElement('button');
             buttonElement.classList.add('ticketing-button');
-            buttonElement.innerHTML = button['NameEn']; // TODO: name localization
+            buttonElement.innerHTML = button[localStorage.getItem('language') === 'en' ? 'NameEn' : 'NameAr'];
             setButtonEvent(buttonElement, button);
             
             buttonsContainer.appendChild(buttonElement);
@@ -167,9 +192,10 @@ function loadButtons(buttons) {
     }
 }
 
-function displayCounterInformation(bankName, branchName, counterName) {
+function displayCounterInformation(bankName, branchName) {
     try {
-        document.getElementById('bank-info').innerText = `${bankName} ${branchName ? '- ' + branchName : ''} ${counterName ? '- ' + counterName : ''}`;
+        document.getElementById('page-title').innerText = bankName;
+        document.getElementById('welcome-message').innerText = `${getString('welcome', localStorage.getItem('language'))} ${branchName}`;
     }
     catch (error) {
         logError(error);
@@ -179,7 +205,80 @@ function displayCounterInformation(bankName, branchName, counterName) {
 function goBack() {
     try {
         showButtonsContainer();
+        showWelcomeMessage();
+        showLanguageButton();
         hideMessageContainer();
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
+function changeLanguage(languageString = defaultLanguage) {
+    try {
+        switch (languageString) {
+            case 'ar':
+                localStorage.setItem('language', 'ar');
+                document.body.dir = 'rtl';
+                break;
+            case 'en':
+                localStorage.setItem('language', 'en');
+                document.body.dir = 'ltr';
+                break;
+            default:
+                localStorage.setItem('language', defaultLanguage);
+                document.body.dir = defaultDirection;
+                break;
+        }
+    
+        getButtons();
+        updateHtmlStrings();
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
+function updateHtmlStrings() {
+    try {
+        const languageString = localStorage.getItem('language');
+        document.getElementById('back-button').innerText = getString('back', languageString);
+        document.getElementById('language-button').innerText = getString('switchLanguage', languageString);
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
+function toggleLanguage() {
+    try {
+        const languageString = localStorage.getItem('language');
+        if (languageString === 'en') {
+            changeLanguage('ar');
+        }
+        else {
+            changeLanguage('en');
+        }
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
+function showWelcomeMessage() {
+    try {
+        const buttonsContainer = document.getElementById('welcome-message');
+        buttonsContainer.style.display = 'block';
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
+function hideWelcomeMessage() {
+    try {
+        const buttonsContainer = document.getElementById('welcome-message');
+        buttonsContainer.style.display = 'none';
     }
     catch (error) {
         logError(error);
@@ -189,7 +288,7 @@ function goBack() {
 function showButtonsContainer() {
     try {
         const buttonsContainer = document.getElementById('buttons-container');
-        buttonsContainer.style.display = 'grid';
+        buttonsContainer.style.display = 'flex';
     }
     catch (error) {
         logError(error);
@@ -246,6 +345,26 @@ function hideErrorMessageContainer() {
     }
 }
 
+function showLanguageButton() {
+    try {
+        const container = document.getElementById('language-button');
+        container.style.display = 'inline-block';
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
+function hideLanguageButton() {
+    try {
+        const container = document.getElementById('language-button');
+        container.style.display = 'none';
+    }
+    catch (error) {
+        logError(error);
+    }
+}
+
 function logError(error) {
     try {
         console.error(`[${new Date()}] ${error}`);
@@ -257,5 +376,5 @@ function logError(error) {
 
 window.onload = _ => {
     startClock();
-    getButtons();
+    changeLanguage();
 }
