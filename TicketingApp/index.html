@@ -7,30 +7,34 @@
     <title>Omar's Ticketing App</title>
 </head>
 <body>
-    <header>
-        <span class="header-element" id="page-title-container">
-            <h1 id="page-title">Omar's Basically Okay Ticketing App</h1>
-        </span>
-        <span class="header-element" id="datetime-container">
-            <h2 id="dateAndTime">09/11/2023 - 10:15:45 AM</h2>
-        </span>
-    </header>
-
-    <h3 id="welcome-message"></h3>
-
-    <div id="buttons-container" class="button-layout"></div>
-    <div class="message" id="message-container">
-        <h4 id="message-body"></h4>
-        <button id="back-button" class="back-button" onclick="goBack()">Back</button>
-    </div>
-
-    <div class="message" id="error-message-container">
-        <h3>Error:</h3>
-        <h4 id="error-message-body"></h4>
-    </div>
-
-    <div>
-        <button class="back-button" id="language-button" onclick="toggleLanguage()">عربي</button>
+    <div id="page-container">
+        <header>
+            <span class="header-element" id="page-title-container">
+                <h1 id="page-title">Omar's Basically Okay Ticketing App</h1>
+            </span>
+            <span class="header-element" id="datetime-container">
+                <h2 id="dateAndTime">09/11/2023 - 10:15:45 AM</h2>
+            </span>
+        </header>
+    
+        <main>
+            <h3 id="welcome-message"></h3>
+        
+            <div id="buttons-container" class="button-layout"></div>
+            <div class="message" id="message-container">
+                <h4 id="message-body"></h4>
+            </div>
+            
+            <div class="message" id="error-message-container">
+                <h3 id="error-message-title">Error:</h3>
+                <h4 id="error-message-body"></h4>
+            </div>
+        </main>
+    
+        <footer>
+            <button class="general-button" id="language-button" onclick="toggleLanguage()">عربي</button>
+            <button class="general-button" id="back-button" onclick="goBack()">Back</button>
+        </footer>
     </div>
 </body>
 <script type="text/javascript" src="index.js"></script>

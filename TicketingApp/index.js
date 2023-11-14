@@ -8,8 +8,6 @@ const defaultDirection = 'ltr';
 
 var stringsEn = {
     title: "Omar's Ticketing App",
-    pageTitle: "Omar's Basically Okay Ticketing App",
-    message: "Message",
     back: "Back",
     error: "Error",
     issueTicketMessage: "A ticket has been issued for",
@@ -24,8 +22,6 @@ var stringsEn = {
 
 var stringsAr = {
     title: "تطبيق التذاكر",
-    pageTitle: "تطبيق التذاكر",
-    message: "رسالة",
     back: "عودة",
     error: "خطأ",
     issueTicketMessage: "تم إصدار تذكرة للخدمة",
@@ -73,18 +69,21 @@ function startClock() {
 
 function setButtonEvent(buttonElement, ticketingButton) {
     try {
-        let message = '';
+        let messageEn = '';
+        let messageAr = '';
         if (ticketingButton['Type'] === 'ISSUE_TICKET') {
-            message = `${getString('issueTicketMessage', localStorage.getItem('language'))} ${ticketingButton[localStorage.getItem('language') === 'en' ? 'ServiceNameEn' : 'ServiceNameAr']}`;
+            messageEn = `${getString('issueTicketMessage', 'en')} ${ticketingButton['ServiceNameEn']}`;
+            messageAr = `${getString('issueTicketMessage', 'ar')} ${ticketingButton['ServiceNameAr']}`;
             buttonElement.addEventListener('click', () => {
-                displayMessage(message);
+                displayMessage(messageEn, messageAr);
                 issueTicket(ticketingButton['ServiceId']);
             });
         }
         else if (ticketingButton['Type'] === 'SHOW_MESSAGE') {
-            message = ticketingButton[localStorage.getItem('language') === 'en' ? 'MessageEn' : 'MessageAr'];
+            messageEn = ticketingButton['MessageEn'];
+            messageAr = ticketingButton['MessageAr'];
             buttonElement.addEventListener('click', () => {
-                displayMessage(message);
+                displayMessage(messageEn, messageAr);
             });
         }
         else {
@@ -96,28 +95,32 @@ function setButtonEvent(buttonElement, ticketingButton) {
     }
 }
 
-function displayMessage(message) {
+function displayMessage(messageEn, messageAr) {
     try {
         const messageBody = document.getElementById('message-body');
-        messageBody.innerHTML = message;
+        localStorage.setItem('englishMessage', messageEn);
+        localStorage.setItem('arabicMessage', messageAr);
+        messageBody.innerHTML = localStorage.getItem('language') === 'en' ? messageEn : messageAr;
+
         showMessageContainer();
         hideButtonsContainer();
         hideWelcomeMessage();
-        hideLanguageButton();
     }
     catch (error) {
         logError(error);
     }
 }
 
-function displayErrorMessage(message) {
+function displayErrorMessage(errorName) {
     try {
         const errorMessageBody = document.getElementById('error-message-body');
-        errorMessageBody.innerHTML = message;
+
+        localStorage.setItem('errorName', errorName);
+        errorMessageBody.innerHTML = getString(errorName, localStorage.getItem('language'));
+
         hideButtonsContainer();
         showErrorMessageContainer();
         hideWelcomeMessage();
-        hideLanguageButton();
     }
     catch (error) {
         logError(error);
@@ -146,19 +149,19 @@ function getButtons() {
             if (!response.ok) {
                 switch (response.status) {
                     case 400:
-                        displayErrorMessage(getString('badRequest'));
+                        displayErrorMessage('badRequest');
                         break;
                     case 401:
-                        displayErrorMessage(getString('unauthorized'));
+                        displayErrorMessage('unauthorized');
                         break;
                     case 404:
-                        displayErrorMessage(getString('notFound'));
+                        displayErrorMessage('notFound');
                         break;
                     case 500:
-                        displayErrorMessage(getString('internalServerError'));
+                        displayErrorMessage('internalServerError');
                         break;
                     default:
-                        displayErrorMessage(getString('unexpectedError'));
+                        displayErrorMessage('unexpectedError');
                         break;
                 }
                 
@@ -206,7 +209,6 @@ function goBack() {
     try {
         showButtonsContainer();
         showWelcomeMessage();
-        showLanguageButton();
         hideMessageContainer();
     }
     catch (error) {
@@ -242,8 +244,12 @@ function changeLanguage(languageString = defaultLanguage) {
 function updateHtmlStrings() {
     try {
         const languageString = localStorage.getItem('language');
+        document.title = getString('title', languageString);
         document.getElementById('back-button').innerText = getString('back', languageString);
         document.getElementById('language-button').innerText = getString('switchLanguage', languageString);
+        document.getElementById('error-message-title').innerHTML = getString('error', languageString) + ':';
+        document.getElementById('error-message-body').innerHTML = getString(localStorage.getItem('errorName'), languageString);
+        document.getElementById('message-body').innerHTML = languageString === 'en' ? localStorage.getItem('englishMessage') : localStorage.getItem('arabicMessage');
     }
     catch (error) {
         logError(error);
@@ -309,6 +315,8 @@ function showMessageContainer() {
     try {
         const container = document.getElementById('message-container');
         container.style.display = 'block';
+        const backButton = document.getElementById('back-button');
+        backButton.style.display = 'inline-block';
     }
     catch (error) {
         logError(error);
@@ -319,6 +327,8 @@ function hideMessageContainer() {
     try {
         const container = document.getElementById('message-container');
         container.style.display = 'none';
+        const backButton = document.getElementById('back-button');
+        backButton.style.display = 'none';
     }
     catch (error) {
         logError(error);

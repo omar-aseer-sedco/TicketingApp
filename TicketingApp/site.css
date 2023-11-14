@@ -8,6 +8,8 @@
 html,
 body {
     height: 100%;
+    width: 100%;
+    margin: auto;
 }
 
 body {
@@ -50,20 +52,36 @@ header {
     display: flex;
 }
 
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+main {
+    padding-bottom: 100px;
+}
+
+footer {
+    position: absolute;
+    height: 100px;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
 .header-element {
     flex: 1;
+    margin-left: 1.25em;
+    margin-right: 1.25em;
 }
 
 #page-title-container {
     text-align: start;
-    margin-left: 1.25em;
-    margin-right: 1.25em;
 }
 
 #datetime-container {
     text-align: end;
-    margin-left: 1.25em;
-    margin-right: 1.25em;
 }
 
 .button-layout {
@@ -71,7 +89,7 @@ header {
     flex-wrap: wrap;
     justify-content: center;
     
-    padding: 2em;
+    padding-bottom: 2em;
     margin: auto;
     width: 90%;
 }
@@ -104,7 +122,7 @@ header {
     margin: auto;
 }
 
-.back-button {
+.general-button {
     border: none;
     border-radius: 8px;
     padding: 0.75em 1.15em;
@@ -117,6 +135,12 @@ header {
 
     font-size: 1.3em;
     cursor: pointer;
+}
+
+#back-button {
+    position: relative;
+    display: none;
+    right: 0;
 }
 
 @media only screen and (min-width: 1440px) {
