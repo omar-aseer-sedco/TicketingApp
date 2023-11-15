@@ -55,12 +55,12 @@ function startClock() {
         const languageString = localStorage.getItem('language');
         const now = new Date();
         const date = now.toLocaleDateString(languageString ? languageString : defaultLanguage);
-        const time = now.toLocaleTimeString(languageString ? languageString : defaultLanguage);
+        const time = now.toLocaleTimeString(languageString ? languageString : defaultLanguage, {hour: '2-digit', minute:'2-digit'});
     
         const datetime = document.getElementById('date-and-time');
-        datetime.innerText = `${date} - ${time}`;
+        datetime.innerText = `${date} ${time}`;
     
-        setTimeout(startClock, 1000);
+        setTimeout(startClock, 5000);
     }
     catch (error) {
         logError(error);
