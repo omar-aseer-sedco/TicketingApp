@@ -10,6 +10,9 @@ html,
 body {
     height: 100%;
     width: 100%;
+    min-width: 300px;
+    min-height: 400px;
+    overflow-x: auto;
     margin: auto;
 }
 
@@ -51,7 +54,7 @@ p {
 
 #page-container {
     position: relative;
-    min-height: 100vh;
+    /* min-height: 100vh; */
 }
 
 main {
@@ -62,7 +65,8 @@ footer {
     background-color: var(--secondary-background-color);
     padding-top: 2em;
     position: fixed;
-    height: 100px;
+    height: 25vh;
+    max-height: 100px;
     width: 100%;
     bottom: 0;
     display: flex;
