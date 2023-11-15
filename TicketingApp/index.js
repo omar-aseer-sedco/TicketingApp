@@ -95,6 +95,8 @@ function setButtonEvent(buttonElement, ticketingButton) {
     }
 }
 
+let globalBackTimeout;
+
 function displayMessage(messageEn, messageAr) {
     try {
         const messageBody = document.getElementById('message-body');
@@ -105,6 +107,8 @@ function displayMessage(messageEn, messageAr) {
         showMessageContainer();
         hideButtonsContainer();
         hideWelcomeMessage();
+
+        globalBackTimeout = setTimeout(goBack, 10000);
     }
     catch (error) {
         logError(error);
@@ -210,6 +214,8 @@ function goBack() {
         showButtonsContainer();
         showWelcomeMessage();
         hideMessageContainer();
+
+        clearTimeout(globalBackTimeout);
     }
     catch (error) {
         logError(error);
@@ -274,7 +280,7 @@ function toggleLanguage() {
 function showWelcomeMessage() {
     try {
         const buttonsContainer = document.getElementById('welcome-message');
-        buttonsContainer.style.display = 'block';
+        buttonsContainer.style.display = null;
     }
     catch (error) {
         logError(error);
@@ -294,7 +300,7 @@ function hideWelcomeMessage() {
 function showButtonsContainer() {
     try {
         const buttonsContainer = document.getElementById('buttons-container');
-        buttonsContainer.style.display = 'flex';
+        buttonsContainer.style.display = null;
     }
     catch (error) {
         logError(error);
@@ -348,26 +354,6 @@ function showErrorMessageContainer() {
 function hideErrorMessageContainer() {
     try {
         const container = document.getElementById('error-message-container');
-        container.style.display = 'none';
-    }
-    catch (error) {
-        logError(error);
-    }
-}
-
-function showLanguageButton() {
-    try {
-        const container = document.getElementById('language-button');
-        container.style.display = 'inline-block';
-    }
-    catch (error) {
-        logError(error);
-    }
-}
-
-function hideLanguageButton() {
-    try {
-        const container = document.getElementById('language-button');
         container.style.display = 'none';
     }
     catch (error) {
